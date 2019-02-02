@@ -35,13 +35,28 @@ RSpec.describe "API::V1::Registrations", type: :request do
     end
 
     context "with invalid params" do
+      let(:invalid_params) {
+        {
+          email: "foo@example.com",
+          password: "supersecret",
+          password_confirmation: "badmatch",
+        }
+      }
+
       it "does not increase user count" do
+        expect{
+          post path, params: invalid_params
+        }.to_not change(User, :count)
       end
 
       it "returns HTTP 422 status" do
+        post path, params: invalid_params
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns error info in response" do
+        post path, params: invalid_params
+        expect(json["error"]).to eq "Password confirmation doesn't match Password"
       end
     end
   end
