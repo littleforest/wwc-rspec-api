@@ -5,7 +5,7 @@ RSpec.describe "API::V1::Registrations", type: :request do
     let(:path) { "/v1/sign_up" }
 
     context "with valid params" do
-      let(:params) {
+      let(:valid_params) {
         {
           email: "foo@example.com",
           password: "supersecret",
@@ -14,12 +14,23 @@ RSpec.describe "API::V1::Registrations", type: :request do
       }
 
       it "increases user count" do
+        expect{
+          post path, params: valid_params
+        }.to change(User, :count).by(1)
       end
 
       it "returns HTTP status success" do
+        post path, params: valid_params
+        expect(response).to have_http_status(:success)
       end
 
       it "returns user info in response" do
+        post path, params: valid_params
+        expect(json["payload"].keys).to match_array(%w(id email auth_token username))
+        expect(json["payload"]["id"]).to_not be nil
+        expect(json["payload"]["email"]).to eq "foo@example.com"
+        expect(json["payload"]["auth_token"]).to_not be nil
+        expect(json["payload"]["username"]).to be nil
       end
     end
 
