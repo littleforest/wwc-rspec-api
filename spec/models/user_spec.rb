@@ -11,4 +11,12 @@ RSpec.describe User, type: :model do
     expect(user.authenticate('wrong_password')).to be false
     expect(user.authenticate('supersecret')).to eq user
   end
+
+  it "saves auth_token on create only" do
+    user = create(:user)
+    expect(user.auth_token).to_not be nil
+    token = user.auth_token
+    user.update!(email: "new@example.com")
+    expect(user.auth_token).to eq token
+  end
 end
