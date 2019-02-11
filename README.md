@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repo is the code for the "Learn Testing Fundamentals by Building an API
+with Rails" course through Women Who Code Silicon Valley. This app is built
+using Ruby 2.5.1 and Rails 5.2.
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Copy the `config/database.yml.example` file to `config/database.yml`.  Edit as needed for desired database setup.
