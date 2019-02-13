@@ -4,7 +4,7 @@ class API::V1::SessionsController < API::V1::APIController
     if @user && @user.authenticate(params[:password])
       render json: @user, root: API_ROOT
     else
-      render json: { error: "Invalid email or password" },
+      render json: { error: 'Invalid email or password' },
         status: :unprocessable_entity
     end
   end
