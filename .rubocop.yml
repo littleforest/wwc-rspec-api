@@ -1,0 +1,46 @@
+AllCops:
+  EnabledByDefault: true
+  Exclude:
+  - 'bin/**/*'
+  - 'config/**/*'
+  - 'db/**/*'
+  - 'script/**/*'
+  - 'spec/**/*'
+  - !ruby/regexp /old_and_unused\.rb$/
+
+  Include:
+  - '**/*.rb'
+  - '**/*.gemfile'
+  - '**/*.gemspec'
+  - '**/*.rake'
+  - '**/*.ru'
+  - '**/Gemfile'
+  - '**/Rakefile'
+
+Lint/UnusedBlockArgument:
+  Enabled: false
+
+Bundler/GemComment:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/Copyright:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/EmptyMethod:
+  Enabled: false
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+Style/SafeNavigation:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
