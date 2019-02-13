@@ -33,10 +33,10 @@ RSpec.describe 'API::V1::Profile', type: :request do
     end
 
     context 'with valid params' do
-      let(:params) {
-      }
+      let(:params) {}
 
-      it_behaves_like 'authorization'
+      it_behaves_like 'authorization' do
+      end
 
       it 'updates user' do
 
@@ -47,8 +47,7 @@ RSpec.describe 'API::V1::Profile', type: :request do
     end
 
     context 'with invalid params' do
-      let(:params) {
-      }
+      let(:params) {}
 
       it_behaves_like 'authorization'
 
