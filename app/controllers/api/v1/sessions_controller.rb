@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::SessionsController < API::V1::APIController
   def create
     @user = User.find_by(email: params[:email])

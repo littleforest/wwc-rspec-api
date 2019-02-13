@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RequestHelpers
   def auth_header(user)
     if user

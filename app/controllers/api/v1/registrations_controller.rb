@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::RegistrationsController < API::V1::APIController
   def create
     @user = User.new(user_params)
