@@ -21,11 +21,6 @@ RSpec.describe "API::V1::Profile", type: :request do
 
   describe "PATCH #me" do
     shared_examples "authorization" do
-      it "returns success if authorized" do
-        patch path, params: params, headers: auth_header(user)
-        expect(response).to have_http_status(:success)
-      end
-
       it "returns unauthorized if bad authorization" do
         patch path, params: params, headers: bad_auth_header
         expect(response).to have_http_status(:unauthorized)
@@ -37,6 +32,11 @@ RSpec.describe "API::V1::Profile", type: :request do
       }
 
       it_behaves_like "authorization"
+
+      it "returns success if authorized" do
+        patch path, params: params, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
+      end
 
       it "updates user" do
       end
