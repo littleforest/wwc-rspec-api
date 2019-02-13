@@ -5,7 +5,7 @@ class API::V1::RegistrationsController < API::V1::APIController
       render json: @user, root: API_ROOT
     else
       render json: { error: @user.errors.full_messages.to_sentence },
-        status: :unprocessable_entity
+             status: :unprocessable_entity
     end
   end
 

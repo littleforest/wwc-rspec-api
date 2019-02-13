@@ -14,7 +14,7 @@ RSpec.describe 'API::V1::Registrations', type: :request do
       }
 
       it 'increases user count' do
-        expect{
+        expect {
           post path, params: valid_params
         }.to change(User, :count).by(1)
       end
@@ -44,7 +44,7 @@ RSpec.describe 'API::V1::Registrations', type: :request do
       }
 
       it 'does not increase user count' do
-        expect{
+        expect {
           post path, params: invalid_params
         }.to_not change(User, :count)
       end
