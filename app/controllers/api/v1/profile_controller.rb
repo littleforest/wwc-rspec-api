@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::ProfileController < API::V1::APIController
   before_action :authenticate
 

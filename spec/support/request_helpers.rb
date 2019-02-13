@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 module RequestHelpers
   def auth_header(user)
     if user
-      { "HTTP_AUTHORIZATION" => "Bearer #{user.auth_token}" }
+      { 'HTTP_AUTHORIZATION' => "Bearer #{user.auth_token}" }
     end
   end
 
   def bad_auth_header
-    { "HTTP_AUTHORIZATION" => "Bearer badtoken" }
+    { 'HTTP_AUTHORIZATION' => 'Bearer badtoken' }
   end
 
   def json

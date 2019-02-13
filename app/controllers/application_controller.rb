@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   def authenticate
     authenticate_token || render_unauthorized
@@ -11,7 +13,7 @@ class ApplicationController < ActionController::Base
 
   def render_unauthorized
     self.headers['WWW-Authenticate'] = 'Token realm="Application"'
-    render json: { error: "Unauthorized token" }, status: :unauthorized
+    render json: { error: 'Unauthorized token' }, status: :unauthorized
   end
 
   def current_user
