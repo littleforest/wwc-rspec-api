@@ -7,6 +7,12 @@ Rails.application.routes.draw do
       post 'sign_in' => 'sessions#create'
       get 'me' => 'profile#show'
       patch 'me' => 'profile#update'
+
+      resources :recipes do
+        collection do
+          get :community
+        end
+      end
     end
   end
 end
