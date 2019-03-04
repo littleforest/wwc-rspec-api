@@ -5,6 +5,16 @@ class ApplicationController < ActionController::Base
     authenticate_token || render_unauthorized
   end
 
+  def optionally_authenticate
+    authenticate_token
+  end
+
+  def current_user
+    @user
+  end
+
+  private
+
   def authenticate_token
     authenticate_with_http_token do |token, options|
       @user = User.find_by(auth_token: token)
@@ -14,9 +24,5 @@ class ApplicationController < ActionController::Base
   def render_unauthorized
     self.headers['WWW-Authenticate'] = 'Token realm="Application"'
     render json: { error: 'Unauthorized token' }, status: :unauthorized
-  end
-
-  def current_user
-    @user
   end
 end

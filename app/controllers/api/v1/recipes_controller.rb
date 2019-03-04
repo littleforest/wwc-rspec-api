@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class API::V1::RecipesController < API::V1::APIController
-  before_action :authenticate_token
+  before_action :optionally_authenticate
 
   def community
     if params[:q].present? && current_user.nil?
