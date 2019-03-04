@@ -5,4 +5,7 @@ RSpec.describe Recipe, type: :model do
     recipe = build(:recipe)
     expect(recipe.valid?).to be true
   end
+
+  describe ".search" do
+  end
 end
