@@ -1,7 +1,18 @@
 # frozen_string_literal: true
 
 class API::V1::RecipesController < API::V1::APIController
-  before_action :optionally_authenticate
+  before_action :optionally_authenticate, only: [:community]
+  before_action :authenticate, except: [:community]
+
+  def create
+    @recipe = current_user.recipes.build(recipe_params)
+    if @recipe.save
+      render json: @recipe, root: API_ROOT
+    else
+      render json: { error: @recipe.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
 
   def community
     if params[:q].present? && current_user.nil?
@@ -18,5 +29,11 @@ class API::V1::RecipesController < API::V1::APIController
       @recipes = Recipe.order(id: :desc)
       render json: @recipes, root: API_ROOT
     end
+  end
+
+  private
+
+  def recipe_params
+    params.permit(:title, :description)
   end
 end

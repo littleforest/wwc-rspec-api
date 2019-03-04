@@ -164,4 +164,67 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe "POST #create" do
+    let(:path) { '/v1/recipes' }
+    let(:user) { create(:user) }
+
+    context 'with valid params' do
+      let(:valid_params) {
+        {
+          title: 'Spaghetti',
+          description: 'a'*1000,
+        }
+      }
+
+      it 'returns success' do
+        post path, params: valid_params, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns unauthorized if bad authorization' do
+        post path, params: valid_params, headers: bad_auth_header
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'increases recipe count' do
+        expect {
+          post path, params: valid_params, headers: auth_header(user)
+        }.to change(user.recipes, :count).by(1)
+      end
+
+      it 'returns recipe info in response' do
+        post path, params: valid_params, headers: auth_header(user)
+        expect(json['payload'].keys).to match_array(%w(id title description))
+        expect(json['payload']['id']).to_not be nil
+        expect(json['payload']['title']).to eq 'Spaghetti'
+        expect(json['payload']['description']).to eq 'a'*1000
+      end
+    end
+
+    context 'with invalid params' do
+      let(:invalid_params) {
+        {
+          title: '',
+          description: 'a'*1000,
+        }
+      }
+
+      it 'does not increase recipe count' do
+        expect {
+          post path, params: invalid_params, headers: auth_header(user)
+        }.to_not change(Recipe, :count)
+      end
+
+      it 'returns HTTP 422 status' do
+        post path, params: invalid_params, headers: auth_header(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns error info in response' do
+        post path, params: invalid_params, headers: auth_header(user)
+        expect(json['error']).to eq "Title can't be blank"
+      end
+    end
+  end
 end
