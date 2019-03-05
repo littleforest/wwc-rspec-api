@@ -4,9 +4,20 @@ class API::V1::RecipesController < API::V1::APIController
   before_action :optionally_authenticate, only: [:community]
   before_action :authenticate, except: [:community]
 
+  before_action :set_recipe, only: [:update]
+
   def create
     @recipe = current_user.recipes.build(recipe_params)
     if @recipe.save
+      render json: @recipe, root: API_ROOT
+    else
+      render json: { error: @recipe.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @recipe.update(recipe_params)
       render json: @recipe, root: API_ROOT
     else
       render json: { error: @recipe.errors.full_messages.to_sentence },
@@ -35,5 +46,9 @@ class API::V1::RecipesController < API::V1::APIController
 
   def recipe_params
     params.permit(:title, :description)
+  end
+
+  def set_recipe
+    @recipe = Recipe.find(params[:id])
   end
 end

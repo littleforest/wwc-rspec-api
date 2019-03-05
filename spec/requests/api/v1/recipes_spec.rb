@@ -227,4 +227,83 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    let(:recipe) { create(:recipe) }
+    let(:path) { "/v1/recipes/#{recipe.id}" }
+    let(:user) { create(:user) }
+
+    let(:valid_params) {
+      {
+        title: 'Spaghetti',
+        description: 'a'*1000,
+      }
+    }
+
+    shared_examples 'unauthorized' do
+      it 'returns unauthorized' do
+        patch path, params: valid_params, headers: auth_header(user)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when guest' do
+      it_behaves_like 'unauthorized' do
+        let(:user) { nil }
+      end
+    end
+
+    context 'when non-recipe owner' do
+      it_behaves_like 'unauthorized'
+    end
+
+    context 'when recipe owner' do
+      let!(:recipe) { create(:recipe, user: user) }
+
+      context 'with valid params' do
+        it 'returns success' do
+          patch path, params: valid_params, headers: auth_header(user)
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'returns unauthorized if bad authorization' do
+          patch path, params: valid_params, headers: bad_auth_header
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it 'does not increase recipe count' do
+          expect {
+            patch path, params: valid_params, headers: auth_header(user)
+          }.to_not change(Recipe, :count)
+        end
+
+        it 'returns recipe info in response' do
+          patch path, params: valid_params, headers: auth_header(user)
+          expect(json['payload'].keys).to match_array(%w(id title description))
+          expect(json['payload']['id']).to eq recipe.id
+          expect(json['payload']['title']).to eq 'Spaghetti'
+          expect(json['payload']['description']).to eq 'a'*1000
+        end
+      end
+
+      context 'with invalid params' do
+        let(:invalid_params) {
+          {
+            title: '',
+            description: 'a'*1000,
+          }
+        }
+
+        it 'returns HTTP 422 status' do
+          patch path, params: invalid_params, headers: auth_header(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it 'returns error info in response' do
+          patch path, params: invalid_params, headers: auth_header(user)
+          expect(json['error']).to eq "Title can't be blank"
+        end
+      end
+    end
+  end
 end
