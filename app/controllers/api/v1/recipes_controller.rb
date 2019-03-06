@@ -6,6 +6,11 @@ class API::V1::RecipesController < API::V1::APIController
 
   before_action :set_recipe, only: [:update]
 
+  def index
+    @recipes = Recipe.all.order(id: :desc)
+    render json: @recipes, root: API_ROOT
+  end
+
   def create
     @recipe = current_user.recipes.build(recipe_params)
     if @recipe.save

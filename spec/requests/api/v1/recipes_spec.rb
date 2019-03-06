@@ -306,4 +306,43 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe 'GET #index' do
+    let(:path) { '/v1/recipes' }
+
+    shared_examples 'unauthorized' do
+      it 'returns unauthorized' do
+        get path, headers: auth_header(user)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'guest' do
+      it_behaves_like 'unauthorized' do
+        let(:user) { nil }
+      end
+    end
+
+    context 'user' do
+      let(:user) { create(:user) }
+      let!(:recipes) { create_list(:recipe, 2, user: user) }
+
+      it 'has http status success' do
+        get path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns recipe list, most recently created' do
+        get path, headers: auth_header(user)
+        expect(json['payload'].count).to eq 2
+        expect(json['payload'][0].keys).to match_array(%w(id title description))
+        expect(json['payload'][0]['id']).to eq recipes.last.id
+        expect(json['payload'][0]['title']).to eq recipes.last.title
+        expect(json['payload'][0]['description']).to eq recipes.last.description
+        expect(json['payload'][1]['id']).to eq recipes.first.id
+        expect(json['payload'][1]['title']).to eq recipes.first.title
+        expect(json['payload'][1]['description']).to eq recipes.first.description
+      end
+    end
+  end
 end
