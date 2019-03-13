@@ -7,7 +7,7 @@ class API::V1::RecipesController < API::V1::APIController
   before_action :set_recipe, only: [:update]
 
   def index
-    @recipes = Recipe.retrieve_all
+    @recipes = current_user.recipes.order(id: :desc)
     render json: @recipes, root: API_ROOT
   end
 

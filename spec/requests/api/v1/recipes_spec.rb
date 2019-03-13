@@ -326,6 +326,7 @@ RSpec.describe 'API::V1::Recipes', type: :request do
     context 'user' do
       let(:user) { create(:user) }
       let!(:recipes) { create_list(:recipe, 2, user: user) }
+      let!(:other_recipe) { create(:recipe) }
 
       it 'has http status success' do
         get path, headers: auth_header(user)
