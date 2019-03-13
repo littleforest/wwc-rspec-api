@@ -9,5 +9,7 @@ class Recipe < ApplicationRecord
   end
 
   def self.search(q)
+    return Recipe.all if q.blank?
+    Recipe.where(title: q)
   end
 end
