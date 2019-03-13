@@ -5,4 +5,8 @@ class RecipePolicy
     @user = user
     @recipe = recipe
   end
+
+  def update?
+    recipe.user == user
+  end
 end

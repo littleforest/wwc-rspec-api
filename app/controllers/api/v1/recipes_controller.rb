@@ -22,6 +22,7 @@ class API::V1::RecipesController < API::V1::APIController
   end
 
   def update
+    authorize @recipe
     if @recipe.update(recipe_params)
       render json: @recipe, root: API_ROOT
     else
