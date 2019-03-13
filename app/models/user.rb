@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   before_validation :downcase_email
 
+  has_many :recipes
+
   private
 
   def downcase_email
