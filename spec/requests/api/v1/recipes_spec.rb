@@ -384,4 +384,75 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let!(:recipe) { create(:recipe) }
+    let(:path) { "/v1/recipes/#{recipe.id}" }
+
+    shared_examples 'unauthorized' do
+      it 'returns unauthorized' do
+        delete path, headers: auth_header(user)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when guest' do
+      it_behaves_like 'unauthorized' do
+        let(:user) { nil }
+      end
+    end
+
+    context 'when other user' do
+      it_behaves_like 'unauthorized' do
+        let(:user) { create(:user) }
+      end
+    end
+
+    context 'when recipe owner' do
+      let(:user) { recipe.user }
+
+      context 'when destroy is successful' do
+        it 'changes recipe count' do
+          expect{
+            delete path, headers: auth_header(user)
+          }.to change(Recipe, :count).by(-1)
+        end
+
+        it 'returns http status success' do
+          delete path, headers: auth_header(user)
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'returns recipe data' do
+          delete path, headers: auth_header(user)
+          expect(json['payload'].keys).to match_array(%w(id title description))
+          expect(json['payload']['id']).to eq recipe.id
+          expect(json['payload']['title']).to eq recipe.title
+          expect(json['payload']['description']).to eq recipe.description
+        end
+      end
+
+      context 'when destroy fails' do
+        before do
+          allow_any_instance_of(Recipe).to receive(:destroy).and_return(false)
+        end
+
+        it 'does not change recipe count' do
+          expect{
+            delete path, headers: auth_header(user)
+          }.to_not change(Recipe, :count)
+        end
+
+        it 'has http status unprocessable entity' do
+          delete path, headers: auth_header(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it 'returns error message' do
+          delete path, headers: auth_header(user)
+          expect(json['error']).to_not be_blank
+        end
+      end
+    end
+  end
 end

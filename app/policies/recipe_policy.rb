@@ -9,4 +9,8 @@ class RecipePolicy
   def update?
     recipe.user == user
   end
+
+  def destroy?
+    update?
+  end
 end

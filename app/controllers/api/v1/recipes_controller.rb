@@ -4,7 +4,7 @@ class API::V1::RecipesController < API::V1::APIController
   before_action :optionally_authenticate, only: [:show, :community]
   before_action :authenticate, except: [:show, :community]
 
-  before_action :set_recipe, only: [:show, :update]
+  before_action :set_recipe, only: [:show, :update, :destroy]
 
   def index
     @recipes = current_user.recipes.order(id: :desc)
@@ -28,6 +28,16 @@ class API::V1::RecipesController < API::V1::APIController
   def update
     authorize @recipe
     if @recipe.update(recipe_params)
+      render json: @recipe, root: API_ROOT
+    else
+      render json: { error: @recipe.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    authorize @recipe
+    if @recipe.destroy
       render json: @recipe, root: API_ROOT
     else
       render json: { error: @recipe.errors.full_messages.to_sentence },
