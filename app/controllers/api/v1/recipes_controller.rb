@@ -50,6 +50,12 @@ class API::V1::RecipesController < API::V1::APIController
     render json: @recipes, root: API_ROOT
   end
 
+  def like
+  end
+
+  def unlike
+  end
+
   private
 
   def recipe_params

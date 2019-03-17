@@ -455,4 +455,50 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe '#like' do
+    let(:user) { create(:user) }
+    let(:path) { "/v1/recipes/#{recipe.id}/like" }
+
+    context 'when like does not already exist' do
+      it 'increases recipe_action count' do
+      end
+
+      it 'returns http status success' do
+      end
+    end
+
+    context 'when like already exists' do
+      let!(:recipe_action) { create(:recipe_action, user: user, recipe: recipe) }
+
+      it 'does not increases recipe_action count' do
+      end
+
+      it 'returns http status success' do
+      end
+    end
+  end
+
+  describe '#unlike' do
+    let(:user) { create(:user) }
+    let(:path) { "/v1/recipes/#{recipe.id}/like" }
+
+    context 'when like exists' do
+      let!(:recipe_action) { create(:recipe_action, user: user, recipe: recipe) }
+
+      it 'decreases recipe_action count' do
+      end
+
+      it 'returns http status success' do
+      end
+    end
+
+    context 'when like does not exists' do
+      it 'does not increases recipe_action count' do
+      end
+
+      it 'returns http status success' do
+      end
+    end
+  end
 end
