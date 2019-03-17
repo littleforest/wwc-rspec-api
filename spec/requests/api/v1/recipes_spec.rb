@@ -346,4 +346,42 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe 'GET #show' do
+    let(:recipe) { create(:recipe) }
+    let(:path) { "/v1/recipes/#{recipe.id}" }
+
+    shared_examples 'can view recipe' do
+      it 'has success status' do
+        get path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'returns recipe data' do
+        get path, headers: auth_header(user)
+        expect(json['payload'].keys).to match_array(%w(id title description))
+        expect(json['payload']['id']).to eq recipe.id
+        expect(json['payload']['title']).to eq recipe.title
+        expect(json['payload']['description']).to eq recipe.description
+      end
+    end
+
+    context 'when guest' do
+      it_behaves_like 'can view recipe' do
+        let(:user) { nil }
+      end
+    end
+
+    context 'when recipe owner' do
+      it_behaves_like 'can view recipe' do
+        let(:user) { recipe.user }
+      end
+    end
+
+    context 'when other user' do
+      it_behaves_like 'can view recipe' do
+        let(:user) { create(:user) }
+      end
+    end
+  end
 end

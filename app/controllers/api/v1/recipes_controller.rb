@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class API::V1::RecipesController < API::V1::APIController
-  before_action :optionally_authenticate, only: [:community]
-  before_action :authenticate, except: [:community]
+  before_action :optionally_authenticate, only: [:show, :community]
+  before_action :authenticate, except: [:show, :community]
 
-  before_action :set_recipe, only: [:update]
+  before_action :set_recipe, only: [:show, :update]
 
   def index
     @recipes = current_user.recipes.order(id: :desc)
@@ -19,6 +19,10 @@ class API::V1::RecipesController < API::V1::APIController
       render json: { error: @recipe.errors.full_messages.to_sentence },
              status: :unprocessable_entity
     end
+  end
+
+  def show
+    render json: @recipe, root: API_ROOT
   end
 
   def update
