@@ -501,4 +501,34 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       end
     end
   end
+
+  describe '#favorites' do
+    let(:user) { create(:user) }
+    let(:path) { '/v1/recipes/favorites' }
+    let!(:recipe_actions) { create_list(:recipe_action, 2, user: user) }
+
+    it 'returns success' do
+      get path, headers: auth_header(user)
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'returns unauthorized if bad authorization' do
+      get path, headers: bad_auth_header
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns list of favorites ordered by most recently favorited' do
+      get path, headers: auth_header(user)
+      last_recipe = recipe_actions.last.recipe
+      first_recipe = recipe_actions.first.recipe
+      expect(json['payload'].count).to eq 2
+      expect(json['payload'][0].keys).to match_array(%w(id title description))
+      expect(json['payload'][0]['id']).to eq last_recipe.id
+      expect(json['payload'][0]['title']).to eq last_recipe.title
+      expect(json['payload'][0]['description']).to eq last_recipe.description
+      expect(json['payload'][1]['id']).to eq first_recipe.id
+      expect(json['payload'][1]['title']).to eq first_recipe.title
+      expect(json['payload'][1]['description']).to eq first_recipe.description
+    end
+  end
 end
