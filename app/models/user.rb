@@ -9,6 +9,8 @@ class User < ApplicationRecord
   before_validation :downcase_email
 
   has_many :recipes
+  has_many :recipe_actions
+  has_many :favorites, through: :recipe_actions, source: :recipe
 
   private
 

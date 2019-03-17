@@ -33,4 +33,14 @@ RSpec.describe User, type: :model do
     user.save
     expect(user.email).to eq 'foo@example.com'
   end
+
+  describe '#favorites' do
+    let(:user) { create(:user) }
+
+    it 'returns recipes in recipe actions as favorites' do
+      ra1 = create(:recipe_action, user: user)
+      ra2 = create(:recipe_action, user: user)
+      expect(user.favorites).to contain_exactly(ra1.recipe, ra2.recipe)
+    end
+  end
 end
