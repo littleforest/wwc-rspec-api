@@ -12,6 +12,10 @@ Rails.application.routes.draw do
         collection do
           get :community
         end
+        member do
+          post :like
+          delete 'like' => 'recipes#unlike'
+        end
       end
     end
   end
