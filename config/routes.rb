@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :recipes do
         collection do
           get :community
+          get :favorites
         end
         member do
           post :like
