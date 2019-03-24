@@ -4,7 +4,16 @@ class API::V1::AddToMailingList
   end
 
   def call
-    # Code that handles adding the user email to a mailing list.  Will likely
-    # be calling a third-party API like Mailchimp.
+    resp = HTTP
+             .basic_auth(user: 'anystring', pass: 'my_mailchimp_api_token')
+             .post(
+               'https://api.mailchimp.com/3.0/lists/list_id_abcde/members',
+               json: {
+                 email_address: @user.email,
+                 status: 'subscribed',
+               }
+             )
+
+    return resp.code == 200
   end
 end
