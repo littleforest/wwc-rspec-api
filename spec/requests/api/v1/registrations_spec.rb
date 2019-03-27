@@ -5,6 +5,11 @@ require 'rails_helper'
 RSpec.describe 'API::V1::Registrations', type: :request do
   describe 'POST #create' do
     let(:path) { '/v1/sign_up' }
+    let(:service) { double("service", call: nil) }
+
+    before do
+      allow(API::V1::AddToMailingList).to receive(:new).and_return(service)
+    end
 
     context 'with valid params' do
       let(:valid_params) {
@@ -36,7 +41,6 @@ RSpec.describe 'API::V1::Registrations', type: :request do
       end
 
       it 'calls the AddToMailingList service' do
-        service = double("service", call: nil)
         expect(API::V1::AddToMailingList).to receive(:new).and_return(service)
         expect(service).to receive(:call)
         post path, params: valid_params
