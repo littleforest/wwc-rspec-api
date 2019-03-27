@@ -462,6 +462,13 @@ RSpec.describe 'API::V1::Recipes', type: :request do
     let(:recipe) { create(:recipe) }
     let(:path) { "/v1/recipes/#{recipe.id}/like" }
 
+    context "when bad auth" do
+      it 'returns unauthorized' do
+        post path, headers: bad_auth_header
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     context 'when like does not already exist' do
       it 'increases recipe_action count' do
         expect{
@@ -496,6 +503,13 @@ RSpec.describe 'API::V1::Recipes', type: :request do
     let(:recipe) { create(:recipe) }
     let(:path) { "/v1/recipes/#{recipe.id}/like" }
 
+    context "when bad auth" do
+      it 'returns unauthorized' do
+        delete path, headers: bad_auth_header
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     context 'when like exists' do
       let!(:recipe_action) { create(:recipe_action, user: user, recipe: recipe) }
 
@@ -529,6 +543,7 @@ RSpec.describe 'API::V1::Recipes', type: :request do
     let(:user) { create(:user) }
     let(:path) { '/v1/recipes/favorites' }
     let!(:recipe_actions) { create_list(:recipe_action, 2, user: user) }
+    let!(:recipe) { create(:recipe) }
 
     it 'returns success' do
       get path, headers: auth_header(user)

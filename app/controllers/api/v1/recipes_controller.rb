@@ -51,6 +51,8 @@ class API::V1::RecipesController < API::V1::APIController
   end
 
   def favorites
+    @recipes = current_user.favorites.order("recipe_actions.id DESC")
+    render json: @recipes, root: API_ROOT
   end
 
   def like
@@ -59,6 +61,7 @@ class API::V1::RecipesController < API::V1::APIController
   end
 
   def unlike
+    current_user.favorites.delete(@recipe) if current_user.favorites.include?(@recipe)
   end
 
   private
