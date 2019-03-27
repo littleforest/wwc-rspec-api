@@ -40,7 +40,7 @@ class API::V1::RecipesController < API::V1::APIController
     if @recipe.destroy
       render json: @recipe, root: API_ROOT
     else
-      render json: { error: @recipe.errors.full_messages.to_sentence },
+      render json: { error: @recipe.error_messages },
              status: :unprocessable_entity
     end
   end

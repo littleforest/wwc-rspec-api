@@ -435,6 +435,7 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       context 'when destroy fails' do
         before do
           allow_any_instance_of(Recipe).to receive(:destroy).and_return(false)
+          allow_any_instance_of(Recipe).to receive(:error_messages).and_return('some error')
         end
 
         it 'does not change recipe count' do
@@ -450,7 +451,7 @@ RSpec.describe 'API::V1::Recipes', type: :request do
 
         it 'returns error message' do
           delete path, headers: auth_header(user)
-          expect(json['error']).to_not be_blank
+          expect(json['error']).to eq 'some error'
         end
       end
     end
