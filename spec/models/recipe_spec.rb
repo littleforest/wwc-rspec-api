@@ -42,4 +42,19 @@ RSpec.describe Recipe, type: :model do
       expect(Recipe.search('Too')).to be_empty
     end
   end
+
+  describe "#error_messages" do
+    let(:recipe) { create(:recipe) }
+    let(:full_msgs) { double("full_messages", to_sentence: 'some error string') }
+    let(:error_msgs) { double("error_messages", full_messages: full_msgs) }
+
+    before do
+      allow(recipe).to receive(:errors).and_return(error_msgs)
+    end
+
+    it "returns the error message" do
+      expect(recipe.error_messages).to eq 'some error string'
+    end
+
+  end
 end
