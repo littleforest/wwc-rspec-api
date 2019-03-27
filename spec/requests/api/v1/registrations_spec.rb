@@ -34,6 +34,13 @@ RSpec.describe 'API::V1::Registrations', type: :request do
         expect(json['payload']['auth_token']).to_not be nil
         expect(json['payload']['username']).to be nil
       end
+
+      it 'calls the AddToMailingList service' do
+        service = double("service", call: nil)
+        expect(API::V1::AddToMailingList).to receive(:new).and_return(service)
+        expect(service).to receive(:call)
+        post path, params: valid_params
+      end
     end
 
     context 'with invalid params' do
@@ -59,6 +66,12 @@ RSpec.describe 'API::V1::Registrations', type: :request do
       it 'returns error info in response' do
         post path, params: invalid_params
         expect(json['error']).to eq "Password confirmation doesn't match Password"
+      end
+
+      it 'does not call the AddToMailingList service' do
+        service = double("service", call: nil)
+        expect(API::V1::AddToMailingList).to_not receive(:new)
+        post path, params: invalid_params
       end
     end
   end
