@@ -14,6 +14,13 @@ class API::V1::AddToMailingList
                }
              )
 
-    return resp.code == 200
+    body = resp.parse(:json)
+
+    if resp.code == 200
+      @user.update(username: body["id"])
+      return true
+    else
+      return false
+    end
   end
 end
