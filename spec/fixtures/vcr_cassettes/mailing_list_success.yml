@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.mailchimp.com/3.0/lists/list_id_abcde/members
+    body:
+      encoding: UTF-8
+      string: '{"email_address":"person1@example.com","status":"subscribed"}'
+    headers:
+      Authorization:
+      - Basic YW55c3RyaW5nOm15X21haWxjaGltcF9hcGlfdG9rZW4=
+      Connection:
+      - close
+      Content-Type:
+      - application/json; charset=UTF-8
+      Host:
+      - api.mailchimp.com
+      User-Agent:
+      - http.rb/4.1.1
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Server:
+      - openresty
+      Content-Type:
+      - application/problem+json; charset=utf-8
+      Content-Length:
+      - '269'
+      X-Request-Id:
+      - bef2f7f0-8040-425d-bb48-688bb889f67b
+      Link:
+      - <https://us1.api.mailchimp.com/schema/3.0/ProblemDetailDocument.json>; rel="describedBy"
+      Date:
+      - Wed, 27 Mar 2019 03:37:05 GMT
+      Connection:
+      - close
+      Set-Cookie:
+      - _AVESTA_ENVIRONMENT=prod; path=/
+      - _mcid=1.4db52fb031271b976f17f6add47b1945; expires=Thu, 26-Mar-2020 03:37:05
+        GMT; Max-Age=31536000; path=/; domain=.mailchimp.com
+    body:
+      encoding: UTF-8
+      string: '{"type":"http://developer.mailchimp.com/documentation/mailchimp/guides/error-glossary/","title":"API
+        Key Invalid","status":401,"detail":"Your API key may be invalid, or you''ve
+        attempted to access the wrong datacenter.","instance":"bef2f7f0-8040-425d-bb48-688bb889f67b"}'
+    http_version: 
+  recorded_at: Wed, 27 Mar 2019 03:37:17 GMT
+recorded_with: VCR 4.0.0
