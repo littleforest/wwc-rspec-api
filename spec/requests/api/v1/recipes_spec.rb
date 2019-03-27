@@ -459,13 +459,19 @@ RSpec.describe 'API::V1::Recipes', type: :request do
 
   describe '#like' do
     let(:user) { create(:user) }
+    let(:recipe) { create(:recipe) }
     let(:path) { "/v1/recipes/#{recipe.id}/like" }
 
     context 'when like does not already exist' do
       it 'increases recipe_action count' do
+        expect{
+          post path, headers: auth_header(user)
+        }.to change(RecipeAction, :count).by(1)
       end
 
       it 'returns http status success' do
+        post path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
       end
     end
 
@@ -473,32 +479,48 @@ RSpec.describe 'API::V1::Recipes', type: :request do
       let!(:recipe_action) { create(:recipe_action, user: user, recipe: recipe) }
 
       it 'does not increases recipe_action count' do
+        expect{
+          post path, headers: auth_header(user)
+        }.to_not change(RecipeAction, :count)
       end
 
       it 'returns http status success' do
+        post path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
       end
     end
   end
 
   describe '#unlike' do
     let(:user) { create(:user) }
+    let(:recipe) { create(:recipe) }
     let(:path) { "/v1/recipes/#{recipe.id}/like" }
 
     context 'when like exists' do
       let!(:recipe_action) { create(:recipe_action, user: user, recipe: recipe) }
 
       it 'decreases recipe_action count' do
+        expect{
+          delete path, headers: auth_header(user)
+        }.to change(RecipeAction, :count).by(-1)
       end
 
       it 'returns http status success' do
+        delete path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
       end
     end
 
     context 'when like does not exists' do
       it 'does not increases recipe_action count' do
+        expect{
+          delete path, headers: auth_header(user)
+        }.to_not change(RecipeAction, :count)
       end
 
       it 'returns http status success' do
+        delete path, headers: auth_header(user)
+        expect(response).to have_http_status(:success)
       end
     end
   end

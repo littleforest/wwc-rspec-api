@@ -4,7 +4,7 @@ class API::V1::RecipesController < API::V1::APIController
   before_action :optionally_authenticate, only: [:show, :community]
   before_action :authenticate, except: [:show, :community]
 
-  before_action :set_recipe, only: [:show, :update, :destroy]
+  before_action :set_recipe, only: [:show, :update, :destroy, :like, :unlike]
 
   def index
     @recipes = current_user.recipes.order(id: :desc)
@@ -54,6 +54,8 @@ class API::V1::RecipesController < API::V1::APIController
   end
 
   def like
+    current_user.favorites << @recipe unless current_user.favorites.include?(@recipe)
+    head :ok
   end
 
   def unlike
